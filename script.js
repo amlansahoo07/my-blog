@@ -2,61 +2,22 @@
 const blogPosts = [
     {
         id: 1,
-        title: "What are the differences between Visual Odometry, Visual-SLAM, and Structure-from-Motion (SfM)?",
+        title: "Loop Closure Detection: Bag-of-Visual-Words, VLADs, and TF-IDF Explained",
+        excerpt: "A comprehensive guide to understanding how visual place recognition works in SLAM systems through vocabulary-based approaches.",
+        category: "SLAM",
+        date: "2025-05-29",
+        readTime: "15 min read",
+        url: "loop-closure-post.html"
+    },
+    {
+        id: 2,
+        title: "Visual Odometry vs Visual-SLAM vs Structure-from-Motion (SfM)",
         excerpt: "Understanding the key distinctions and applications of these computer vision techniques in robotics and 3D reconstruction.",
         category: "SLAM",
         date: "2025-05-29",
         readTime: "12 min read",
         url: "post.html"
     },
-    {
-        id: 2,
-        title: "Getting Started with Web Development",
-        excerpt: "A comprehensive guide to begin your journey in web development, covering the basics of HTML, CSS, and JavaScript.",
-        category: "Web Dev",
-        date: "2025-05-25",
-        readTime: "5 min read"
-    },
-    {
-        id: 2,
-        title: "The Future of Artificial Intelligence",
-        excerpt: "Exploring the latest trends and developments in AI technology and its impact on various industries.",
-        category: "AI",
-        date: "2025-05-20",
-        readTime: "8 min read"
-    },
-    {
-        id: 3,
-        title: "Building Responsive Layouts",
-        excerpt: "Learn how to create beautiful, responsive layouts that work perfectly across all devices and screen sizes.",
-        category: "CSS",
-        date: "2025-05-15",
-        readTime: "6 min read"
-    },
-    {
-        id: 4,
-        title: "JavaScript ES6+ Features",
-        excerpt: "A deep dive into modern JavaScript features that every developer should know and use in their projects.",
-        category: "JavaScript",
-        date: "2025-05-10",
-        readTime: "7 min read"
-    },
-    {
-        id: 5,
-        title: "Design Principles for Developers",
-        excerpt: "Understanding fundamental design principles that can help developers create more intuitive user interfaces.",
-        category: "Design",
-        date: "2025-05-05",
-        readTime: "4 min read"
-    },
-    {
-        id: 6,
-        title: "Version Control with Git",
-        excerpt: "Master Git and GitHub to manage your code effectively and collaborate with other developers.",
-        category: "Tools",
-        date: "2025-05-01",
-        readTime: "9 min read"
-    }
 ];
 
 // State management
