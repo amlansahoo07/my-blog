@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post - My Blog</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="post-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html"><h2>My Blog</h2></a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#blog" class="nav-link">Blog</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Post Header -->
+    <header class="post-header">
+        <div class="container">
+            <div class="post-meta">
+                <span class="post-category">SLAM</span>
+                <span class="post-date">May 29, 2025</span>
+                <span class="post-read-time">12 min read</span>
+            </div>
+            <h1 class="post-title">Visual Odometry vs Visual-SLAM vs Structure-from-Motion (SfM)</h1>
+            <p class="post-subtitle">Understanding the key distinctions and applications of these computer vision techniques in robotics and 3D reconstruction</p>
+            <div class="post-author">
+                <div class="author-image">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="author-info">
+                    <span class="author-name">Amlan Sahoo</span>
+                    <span class="author-title">MSc Robotics and AI, UCL</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <main class="post-content">
+        <div class="container">
+            <article class="post-article">
+                
+                <div class="post-section">
+                    <p class="lead">In the field of computer vision and robotics, three closely related but distinct techniques often cause confusion: Visual Odometry (VO), Visual-SLAM, and Structure-from-Motion (SfM). While all three deal with extracting 3D information from visual data, they serve different purposes and are optimized for different scenarios.</p>
+                </div>
+
+                <div class="post-section">
+                    <h2>Introduction</h2>
+                    <p>Understanding the differences between these techniques is crucial for researchers and engineers working in robotics, autonomous vehicles, augmented reality, and 3D reconstruction. Each method has its strengths, limitations, and ideal use cases.</p>
+                </div>
+
+                <div class="post-section">
+                    <h2>1. Visual Odometry (VO)</h2>
+                    
+                    <h3>Definition</h3>
+                    <p>Visual Odometry is the process of estimating the motion (position and orientation) of a camera by analyzing the changes in visual features between consecutive frames. It's essentially the visual equivalent of wheel odometry used in traditional robotics.</p>
+                    
+                    <h3>Key Characteristics</h3>
+                    <ul>
+                        <li><strong>Real-time operation:</strong> Designed for online, sequential processing</li>
+                        <li><strong>Local consistency:</strong> Focuses on frame-to-frame motion estimation</li>
+                        <li><strong>Drift accumulation:</strong> Errors accumulate over time without loop closure</li>
+                        <li><strong>Minimal memory usage:</strong> Typically only considers recent frames</li>
+                    </ul>
+
+                    <h3>Applications</h3>
+                    <p>Visual Odometry is commonly used in:</p>
+                    <ul>
+                        <li>Autonomous vehicle navigation</li>
+                        <li>Robot localization in GPS-denied environments</li>
+                        <li>Drone navigation and stabilization</li>
+                        <li>Real-time camera tracking for AR/VR</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <h4>Basic VO Pipeline (Pseudocode)</h4>
+                        <pre><code class="language-python">
+def visual_odometry(frame_sequence):
+    poses = [initial_pose]
+    
+    for i in range(1, len(frame_sequence)):
+        # Extract and match features
+        features_prev = extract_features(frame_sequence[i-1])
+        features_curr = extract_features(frame_sequence[i])
+        matches = match_features(features_prev, features_curr)
+        
+        # Estimate motion
+        relative_pose = estimate_motion(matches)
+        
+        # Update absolute pose
+        current_pose = poses[-1] * relative_pose
+        poses.append(current_pose)
+    
+    return poses
+                        </code></pre>
+                    </div>
+                </div>
+
+                <div class="post-section">
+                    <h2>2. Visual-SLAM (Simultaneous Localization and Mapping)</h2>
+                    
+                    <h3>Definition</h3>
+                    <p>Visual-SLAM extends Visual Odometry by simultaneously building a map of the environment while localizing the camera within that map. It incorporates loop closure detection and global optimization to maintain long-term consistency.</p>
+                    
+                    <h3>Key Characteristics</h3>
+                    <ul>
+                        <li><strong>Global consistency:</strong> Maintains a globally consistent map and trajectory</li>
+                        <li><strong>Loop closure:</strong> Detects when the camera revisits previously mapped areas</li>
+                        <li><strong>Backend optimization:</strong> Continuously refines the map and trajectory</li>
+                        <li><strong>Memory management:</strong> Maintains a database of keyframes and landmarks</li>
+                    </ul>
+
+                    <h3>Components</h3>
+                    <div class="info-box">
+                        <h4>Frontend (Tracking)</h4>
+                        <p>Handles frame-to-frame motion estimation, similar to VO</p>
+                        
+                        <h4>Backend (Mapping)</h4>
+                        <p>Manages the map, performs loop closure, and optimizes the global structure</p>
+                        
+                        <h4>Loop Closure</h4>
+                        <p>Detects when the camera returns to a previously visited location</p>
+                    </div>
+
+                    <h3>Popular Visual-SLAM Systems</h3>
+                    <ul>
+                        <li><strong>ORB-SLAM3:</strong> Feature-based SLAM supporting monocular, stereo, and RGB-D cameras</li>
+                        <li><strong>DSO (Direct Sparse Odometry):</strong> Direct method using photometric error</li>
+                        <li><strong>RTAB-Map:</strong> RGB-D SLAM with appearance-based loop closure</li>
+                        <li><strong>LSD-SLAM:</strong> Semi-dense direct SLAM method</li>
+                    </ul>
+                </div>
+
+                <div class="post-section">
+                    <h2>3. Structure-from-Motion (SfM)</h2>
+                    
+                    <h3>Definition</h3>
+                    <p>Structure-from-Motion is an offline technique that reconstructs 3D structure from a collection of 2D images taken from different viewpoints. Unlike VO and SLAM, SfM typically processes all images simultaneously using global optimization.</p>
+                    
+                    <h3>Key Characteristics</h3>
+                    <ul>
+                        <li><strong>Offline processing:</strong> Batch processing of image collections</li>
+                        <li><strong>Global optimization:</strong> Bundle adjustment over all cameras and points</li>
+                        <li><strong>High accuracy:</strong> Optimized for reconstruction quality over speed</li>
+                        <li><strong>Unordered images:</strong> Can handle images taken in any order</li>
+                    </ul>
+
+                    <h3>SfM Pipeline</h3>
+                    <div class="pipeline-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Feature Detection & Matching</h4>
+                                <p>Extract features from all images and find correspondences</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Initial Reconstruction</h4>
+                                <p>Select a good initial pair and triangulate 3D points</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Incremental Reconstruction</h4>
+                                <p>Add cameras one by one and triangulate new points</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Bundle Adjustment</h4>
+                                <p>Globally optimize camera parameters and 3D points</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Applications</h3>
+                    <ul>
+                        <li>Cultural heritage preservation and documentation</li>
+                        <li>Archaeological site reconstruction</li>
+                        <li>3D modeling for film and gaming</li>
+                        <li>Photogrammetry and surveying</li>
+                        <li>Google Street View and similar mapping services</li>
+                    </ul>
+                </div>
+
+                <div class="post-section">
+                    <h2>Comparison Summary</h2>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Aspect</th>
+                                    <th>Visual Odometry</th>
+                                    <th>Visual-SLAM</th>
+                                    <th>Structure-from-Motion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Processing</strong></td>
+                                    <td>Real-time, sequential</td>
+                                    <td>Real-time with backend optimization</td>
+                                    <td>Offline, batch processing</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Primary Goal</strong></td>
+                                    <td>Camera motion estimation</td>
+                                    <td>SLAM (localization + mapping)</td>
+                                    <td>3D reconstruction</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Accuracy</strong></td>
+                                    <td>Good locally, drifts over time</td>
+                                    <td>Globally consistent</td>
+                                    <td>Highest accuracy</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Memory Usage</strong></td>
+                                    <td>Low</td>
+                                    <td>Moderate to high</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Loop Closure</strong></td>
+                                    <td>No</td>
+                                    <td>Yes</td>
+                                    <td>Implicit (global optimization)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Input</strong></td>
+                                    <td>Sequential frames</td>
+                                    <td>Sequential frames</td>
+                                    <td>Unordered image collection</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="post-section">
+                    <h2>When to Use Which?</h2>
+                    
+                    <div class="use-cases">
+                        <div class="use-case">
+                            <h3><i class="fas fa-robot"></i> Choose Visual Odometry when:</h3>
+                            <ul>
+                                <li>Real-time performance is critical</li>
+                                <li>Memory and computational resources are limited</li>
+                                <li>Short-term motion estimation is sufficient</li>
+                                <li>You have other sensors for global localization</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="use-case">
+                            <h3><i class="fas fa-map"></i> Choose Visual-SLAM when:</h3>
+                            <ul>
+                                <li>You need both localization and mapping</li>
+                                <li>Long-term operation is required</li>
+                                <li>Global consistency is important</li>
+                                <li>The environment may contain loops</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="use-case">
+                            <h3><i class="fas fa-cube"></i> Choose SfM when:</h3>
+                            <ul>
+                                <li>Highest reconstruction quality is needed</li>
+                                <li>Offline processing is acceptable</li>
+                                <li>You have a collection of images to process</li>
+                                <li>Creating detailed 3D models is the goal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-section">
+                    <h2>Recent Advances and Future Directions</h2>
+                    <p>The field continues to evolve with exciting developments:</p>
+                    
+                    <h3>Deep Learning Integration</h3>
+                    <ul>
+                        <li><strong>Learning-based features:</strong> SuperPoint, R2D2, and other learned descriptors</li>
+                        <li><strong>Deep VO/SLAM:</strong> DeepVO, UnDeepVO, and neural SLAM approaches</li>
+                        <li><strong>Depth estimation:</strong> MonoDepth and other monocular depth networks</li>
+                    </ul>
+
+                    <h3>Robust Methods</h3>
+                    <ul>
+                        <li><strong>Dynamic environments:</strong> Handling moving objects and changing scenes</li>
+                        <li><strong>Challenging conditions:</strong> Low light, weather, and texture-less environments</li>
+                        <li><strong>Multi-sensor fusion:</strong> Combining visual with IMU, LiDAR, and other sensors</li>
+                    </ul>
+                </div>
+
+                <div class="post-section">
+                    <h2>Conclusion</h2>
+                    <p>Visual Odometry, Visual-SLAM, and Structure-from-Motion each serve important roles in computer vision and robotics. Understanding their differences helps in choosing the right approach for your specific application:</p>
+                    
+                    <ul>
+                        <li><strong>VO</strong> for real-time motion estimation with minimal resources</li>
+                        <li><strong>Visual-SLAM</strong> for autonomous systems requiring persistent localization and mapping</li>
+                        <li><strong>SfM</strong> for high-quality 3D reconstruction from image collections</li>
+                    </ul>
+                    
+                    <p>As the field advances, we're seeing increased integration of these techniques with deep learning and multi-sensor approaches, opening new possibilities for robust and accurate 3D perception systems.</p>
+                </div>
+
+                <!-- Post Tags -->
+                <div class="post-tags">
+                    <span class="tag">Computer Vision</span>
+                    <span class="tag">SLAM</span>
+                    <span class="tag">Visual Odometry</span>
+                    <span class="tag">Structure from Motion</span>
+                    <span class="tag">3D Reconstruction</span>
+                    <span class="tag">Robotics</span>
+                </div>
+
+            </article>
+
+            <!-- Post Navigation -->
+            <div class="post-navigation">
+                <a href="index.html#blog" class="nav-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Blog
+                </a>
+                <div class="share-buttons">
+                    <span>Share this post:</span>
+                    <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="share-btn facebook"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="post-script.js"></script>
+</body>
+</html>
