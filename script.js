@@ -18,6 +18,15 @@ const blogPosts = [
         readTime: "12 min read",
         url: "post.html"
     },
+    {
+        id: 3,
+        title: "PTAM, ORB-SLAM, and SVO: Features and Differences Explained",
+        excerpt: "A comprehensive comparison of three influential monocular SLAM systems, exploring their unique features, strengths, and applications.",
+        category: "SLAM",
+        date: "2025-05-29",
+        readTime: "18 min read",
+        url: "slam-systems-post.html"
+    },
 ];
 
 // State management
